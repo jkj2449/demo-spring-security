@@ -1,11 +1,16 @@
 package com.example.demospringsecurity.form;
 
+import com.example.demospringsecurity.common.SecurityLogger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.util.concurrent.Callable;
 
+@Slf4j
 @Controller
 public class SampleController {
     @GetMapping("/")
@@ -40,5 +45,16 @@ public class SampleController {
     public String user(Model model, Principal principal) {
         model.addAttribute("message", principal.getName());
         return "admin";
+    }
+
+    @GetMapping("/async-handler")
+    @ResponseBody
+    public Callable<String> asyncHandler() {
+        SecurityLogger.log("MVC");
+
+        return () -> {
+            SecurityLogger.log("Callable");
+            return "Async Handler";
+        };
     }
 }
