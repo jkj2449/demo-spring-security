@@ -1,6 +1,7 @@
 package com.example.demospringsecurity.form;
 
 import com.example.demospringsecurity.common.SecurityLogger;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.util.concurrent.Callable;
 
+@RequiredArgsConstructor
 @Slf4j
 @Controller
 public class SampleController {
+    private final SampleService sampleService;
+
     @GetMapping("/")
     public String index(Model model, Principal principal) {
         if(principal == null) {
@@ -56,5 +60,14 @@ public class SampleController {
             SecurityLogger.log("Callable");
             return "Async Handler";
         };
+    }
+
+    @GetMapping("/async-service")
+    @ResponseBody
+    public String asyncService() {
+        SecurityLogger.log("MVC, before async service");
+        sampleService.asyncService();
+        SecurityLogger.log("MVC, after async service");
+        return "Async Service";
     }
 }
