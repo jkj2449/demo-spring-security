@@ -37,8 +37,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler());
 
-        http.formLogin();
+        http.formLogin()
+                .loginPage("/login")
+                .permitAll();
+
         http.httpBasic();
+        http.logout()
+                .logoutUrl("/logout") // default /logout 이다.
+                .logoutSuccessUrl("/");
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // Async 일경우 상속 받을 수 있는 ThreadLocal로 셋팅해줘야 한다.
     }
