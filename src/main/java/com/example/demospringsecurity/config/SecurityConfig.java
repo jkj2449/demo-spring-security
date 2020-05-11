@@ -1,6 +1,7 @@
 package com.example.demospringsecurity.config;
 
 import com.example.demospringsecurity.account.AccountService;
+import com.example.demospringsecurity.common.LoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -32,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
+
         http.authorizeRequests()
                 .mvcMatchers("/", "/info", "signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
